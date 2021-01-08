@@ -15,16 +15,15 @@ public class lineOfSight : MonoBehaviour {
     
     void Start() {
         viewObjects = utils.GetObjectsInLayer(Mathf.FloorToInt(Mathf.Log(viewObstaclesMask,2)));
-        Debug.Log("viewObjects: " + viewObjects.Count);
         viewMesh = new Mesh();
         viewMesh.name = "View Mesh";
         meshFilter.mesh = viewMesh;
     }
 
     void LateUpdate() {
-        foreach(GameObject go in viewObjects) {
-            SetRendererEnabled(go, false);
-        }
+        // foreach(GameObject go in viewObjects) {
+        //     SetRendererEnabled(go, false);
+        // }
         DrawLineOfSight();
     }
 
@@ -40,9 +39,23 @@ public class lineOfSight : MonoBehaviour {
 
     List<Vector2> GetPointsToObject(GameObject go) {
         List<Vector2> points = new List<Vector2>();
-        Collider2D coll = go.GetComponent<Collider2D>();
+        PolygonCollider2D coll = go.GetComponent<PolygonCollider2D>();
         // how do i get the vertices of the collider
         //  what if the collider is not a square
+        // Debug.Log("points: " + go.name + ", " + coll.points[0]);
+        if(coll != null) {
+            foreach(Vector2 point in coll.points) {
+                Vector3 worldPoint = go.transform.TransformPoint(new Vector3(point.x,point.y,0));
+                ViewCastInfo viewCast = utils.ViewCast(transform, worldPoint - transform.position, viewRadius, viewObstaclesMask);
+                Debug.Log("hit? " + viewCast.hit + " " + viewCast.point + " vs " + worldPoint + ", " + (viewCast.collider.gameObject == go) + ", " + (viewCast.point == new Vector2(worldPoint.x, worldPoint.y)));
+                if(viewCast.hit && viewCast.collider.gameObject == go && viewCast.point == new Vector2(worldPoint.x, worldPoint.y)) {
+                    // Debug.DrawLine(transform.position, worldPoint, Color.blue);
+                } else {
+                    // Debug.DrawLine(transform.position, worldPoint, Color.red);
+                }
+            }
+        }
+        
         return points;
     }
 
