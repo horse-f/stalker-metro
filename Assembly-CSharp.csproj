@@ -38,6 +38,8 @@
   <ItemGroup>
      <Compile Include="Assets\character\characterController.cs" />
      <Compile Include="Assets\character\fieldOfView.cs" />
+     <Compile Include="Assets\character\lineOfSight.cs" />
+     <Compile Include="Assets\utility\utils.cs" />
      <None Include="Assets\shaders\FogOfWarShader.shader" />
     <Reference Include="UnityEngine">
         <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.17f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>

@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct ViewCastInfo {
-    public bool hit;
-    public float distance;
-    public Vector2 point;
-    public float angle;
+// public struct ViewCastInfo {
+//     public bool hit;
+//     public float distance;
+//     public Vector2 point;
+//     public float angle;
 
-    public ViewCastInfo(bool _hit, float _dist, Vector2 _point, float _angle) {
-        hit = _hit;
-        point = _point;
-        distance = _dist;
-        angle = _angle;
-    }
-}
+//     public ViewCastInfo(bool _hit, float _dist, Vector2 _point, float _angle) {
+//         hit = _hit;
+//         point = _point;
+//         distance = _dist;
+//         angle = _angle;
+//     }
+// }
 
 public struct EdgeInfo {
     public Vector2 pointA;
@@ -60,10 +60,6 @@ public class fieldOfView : MonoBehaviour {
         DrawViewField();
     }
 
-    // List<GameObject> FindViewObjects() {
-        
-    // }
-
     void DrawViewField() {
         int stepCount = Mathf.RoundToInt(viewAngle * meshResolution);
         float stepAngle = viewAngle / stepCount;
@@ -81,7 +77,7 @@ public class fieldOfView : MonoBehaviour {
 
         for(int i = 0; i <= stepCount; i++) {
             float angle = transform.eulerAngles.y - viewAngle / 2 + stepAngle * i;
-            ViewCastInfo newCastInfo = ViewCast(angle);
+            ViewCastInfo newCastInfo = utils.ViewCast(transform, angle, viewRadius, viewObstaclesMask);
             if(i > 0) {
                 GetEdgePoints(oldCastInfo,newCastInfo,points);
             }
@@ -116,24 +112,24 @@ public class fieldOfView : MonoBehaviour {
         return new MeshInfo(tris,vertices);
     }
 
-    ViewCastInfo ViewCast(float globalAngle) {
-        Vector2 dir = DirFromAngle(globalAngle);
-        RaycastHit2D hit2D = Physics2D.Raycast(transform.position, dir, viewRadius, viewObstaclesMask);
+    // ViewCastInfo ViewCast(float globalAngle) {
+    //     Vector2 dir = DirFromAngle(globalAngle);
+    //     RaycastHit2D hit2D = Physics2D.Raycast(transform.position, dir, viewRadius, viewObstaclesMask);
 
-        if(hit2D.collider) {
-            return new ViewCastInfo(true, hit2D.distance, hit2D.point, globalAngle);
-        } else {
-            Vector2 pos = new Vector2(transform.position.x, transform.position.y);
-            return new ViewCastInfo(false, viewRadius, pos + dir.normalized * viewRadius, globalAngle);
-        }
-    }
+    //     if(hit2D.collider) {
+    //         return new ViewCastInfo(true, hit2D.distance, hit2D.point, globalAngle);
+    //     } else {
+    //         Vector2 pos = new Vector2(transform.position.x, transform.position.y);
+    //         return new ViewCastInfo(false, viewRadius, pos + dir.normalized * viewRadius, globalAngle);
+    //     }
+    // }
 
-    Vector2 DirFromAngle(float globalAngle, bool isGlobal=false) {
-        if(!isGlobal) {
-            globalAngle += transform.eulerAngles.y;
-        }
-        return new Vector2(Mathf.Sin(globalAngle * Mathf.Deg2Rad), Mathf.Cos(globalAngle * Mathf.Deg2Rad));
-    }
+    // Vector2 DirFromAngle(float globalAngle, bool isGlobal=false) {
+    //     if(!isGlobal) {
+    //         globalAngle += transform.eulerAngles.y;
+    //     }
+    //     return new Vector2(Mathf.Sin(globalAngle * Mathf.Deg2Rad), Mathf.Cos(globalAngle * Mathf.Deg2Rad));
+    // }
 
     void GetEdgePoints(ViewCastInfo oldCastInfo, ViewCastInfo newCastInfo, List<Vector2> points) {
         bool edgeDetectionThresholdExceeded = Mathf.Abs(oldCastInfo.distance - newCastInfo.distance) > edgeDetectionThreshold;
@@ -166,7 +162,7 @@ public class fieldOfView : MonoBehaviour {
 
         for(int i = 0; i < edgeDetectionIterations; i++) {
             float angle = (minAngle + maxAngle) / 2;
-            ViewCastInfo newViewCast = ViewCast(angle);
+            ViewCastInfo newViewCast = utils.ViewCast(transform, angle, viewRadius, viewObstaclesMask);
             bool edgeDetectionThresholdExceeded = Mathf.Abs(minCast.distance - newViewCast.distance) > edgeDetectionThreshold;
             if(newViewCast.hit == minCast.hit && !edgeDetectionThresholdExceeded) {
                 minAngle = angle;
