@@ -33,22 +33,25 @@ public class fieldOfView : MonoBehaviour {
     public float shadowOffset = 1.0f;
 
     private Mesh viewMesh;
-    // private List<GameObject> viewObstacles;
+    private List<GameObject> viewObstacles;
 
     void Start() {
-        // viewObstacles = FindViewObjects();
+        // viewObstacles = utils.GetObjectsInLayer(Mathf.FloorToInt(Mathf.Log(viewObstaclesMask.value, 2)));
+        // Debug.Log("viewObstacles: " + viewObstacles.Count);
         viewMesh = new Mesh();
         viewMesh.name = "View Mesh";
         meshFilter.mesh = viewMesh;
     }
 
     void LateUpdate() {
+        // for(int i = 0; i < viewObstacles.Count; i++) {
+        //     Renderer r = viewObstacles[i].GetComponent<Renderer>();
+        //     if(r != null) {
+        //         r.enabled = false;
+        //     }
+        // }
         DrawViewField();
     }
-
-    // List<GameObject> FindViewObjects() {
-        
-    // }
 
     void DrawViewField() {
         int stepCount = Mathf.RoundToInt(viewAngle * meshResolution);
@@ -71,6 +74,12 @@ public class fieldOfView : MonoBehaviour {
             if(i > 0) {
                 GetEdgePoints(oldCastInfo,newCastInfo,points);
             }
+            // if(newCastInfo.collider != null) {
+            //     Renderer r = newCastInfo.collider.gameObject.GetComponent<Renderer>();
+            //     if(r) {
+            //         r.enabled = true;
+            //     }
+            // }
             Debug.DrawLine(
                 transform.position,
                 new Vector2(transform.position.x, transform.position.y) + utils.DirFromAngle(transform, angle, true) * newCastInfo.distance,

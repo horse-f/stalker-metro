@@ -173,8 +173,8 @@ GameObject:
   - component: {fileID: 8808394753817614811}
   - component: {fileID: 2133000144181896816}
   - component: {fileID: 7843407988080723459}
-  m_Layer: 0
-  m_Name: View Visualization
+  m_Layer: 29
+  m_Name: FOWSightLines
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -364,7 +364,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   accel: 8
-  sprintAccel: 13
+  sprintAccel: 11
 --- !u!58 &8420447802388507881
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -402,7 +402,7 @@ MonoBehaviour:
   edgeDetectionThreshold: 1.5
   edgeDetectionIterations: 10
   meshFilter: {fileID: 2133000144181896816}
-  shadowOffset: 0
+  shadowOffset: 0.5
 --- !u!1 &8420447803191156308
 GameObject:
   m_ObjectHideFlags: 0
