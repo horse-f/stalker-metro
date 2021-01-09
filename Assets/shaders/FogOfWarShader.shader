@@ -49,18 +49,8 @@
             fixed4 frag (v2f i) : SV_Target
             {
                 fixed4 col = tex2D(_MainTex, i.uv) + tex2D(_SecondaryTex, i.uv) + tex2D(_SightLinesTex, i.uv);
-                // col = tex2D(_SightLinesTex, i.uv);
-                // fixed4 col = tex2D(_SightLinesTex, i.uv);
-                // r + b + g = 0
-                // r + g = .5
-                // r > 1
-                // g > 1
-                // r + b > 1
-                // col.a = 2.0f - 1.5f * col.r - 0.5f * col.b + col.g;
-
                 col.a = 2.0f - 1.5f * (col.r * col.g) - 0.5f * (col.r * col.b * col.g);
                 return fixed4(_DefaultColor.r, _DefaultColor.g, _DefaultColor.b, col.a);
-                // return col;
             }
             ENDCG
         }
