@@ -6,6 +6,7 @@ using UnityEngine;
 public class characterController : MonoBehaviour {
     public float accel = 30.0f;
     public float sprintAccel = 60.0f;
+    public float cameraZoom = 15.0f;
     
     private Rigidbody2D rigidbody2d;
     private bool sprinting = false;
@@ -47,7 +48,6 @@ public class characterController : MonoBehaviour {
                 a = sprintAccel;
             }
         }
-        // Debug.Log("force: " + (transform.up + transform.right) * input.normalized * a);
         rigidbody2d.AddForce((transform.up + transform.right) * input.normalized * a);
     }
 }

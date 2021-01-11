@@ -36,20 +36,12 @@ public class fieldOfView : MonoBehaviour {
     private List<GameObject> viewObstacles;
 
     void Start() {
-        // viewObstacles = utils.GetObjectsInLayer(Mathf.FloorToInt(Mathf.Log(viewObstaclesMask.value, 2)));
-        // Debug.Log("viewObstacles: " + viewObstacles.Count);
         viewMesh = new Mesh();
         viewMesh.name = "View Mesh";
         meshFilter.mesh = viewMesh;
     }
 
     void LateUpdate() {
-        // for(int i = 0; i < viewObstacles.Count; i++) {
-        //     Renderer r = viewObstacles[i].GetComponent<Renderer>();
-        //     if(r != null) {
-        //         r.enabled = false;
-        //     }
-        // }
         DrawViewField();
     }
 
@@ -74,17 +66,11 @@ public class fieldOfView : MonoBehaviour {
             if(i > 0) {
                 GetEdgePoints(oldCastInfo,newCastInfo,points);
             }
-            // if(newCastInfo.collider != null) {
-            //     Renderer r = newCastInfo.collider.gameObject.GetComponent<Renderer>();
-            //     if(r) {
-            //         r.enabled = true;
-            //     }
-            // }
-            Debug.DrawLine(
-                transform.position,
-                new Vector2(transform.position.x, transform.position.y) + utils.DirFromAngle(transform, angle, true) * newCastInfo.distance,
-                Color.red
-            );
+            // Debug.DrawLine(
+            //     transform.position,
+            //     new Vector2(transform.position.x, transform.position.y) + utils.DirFromAngle(transform, angle, true) * newCastInfo.distance,
+            //     Color.red
+            // );
             points.Add(newCastInfo.point);
             oldCastInfo = newCastInfo;
         }
@@ -116,19 +102,19 @@ public class fieldOfView : MonoBehaviour {
         if((oldCastInfo.hit && !newCastInfo.hit) || (oldCastInfo.hit && newCastInfo.hit && edgeDetectionThresholdExceeded)) {
             EdgeInfo edgeInfo = FindEdge(oldCastInfo, newCastInfo);
             if(edgeInfo.pointA != Vector2.zero) {
-                Debug.DrawLine(
-                    transform.position,
-                    new Vector3(edgeInfo.pointA.x, edgeInfo.pointA.y, 0),
-                    Color.blue
-                );
+                // Debug.DrawLine(
+                //     transform.position,
+                //     new Vector3(edgeInfo.pointA.x, edgeInfo.pointA.y, 0),
+                //     Color.blue
+                // );
                 points.Add(edgeInfo.pointA);
             }
             if(edgeInfo.pointB != Vector2.zero) {
-                Debug.DrawLine(
-                    transform.position,
-                    new Vector3(edgeInfo.pointB.x, edgeInfo.pointB.y, 0),
-                    Color.green
-                );
+                // Debug.DrawLine(
+                //     transform.position,
+                //     new Vector3(edgeInfo.pointB.x, edgeInfo.pointB.y, 0),
+                //     Color.green
+                // );
                 points.Add(edgeInfo.pointB);
             }
         }
