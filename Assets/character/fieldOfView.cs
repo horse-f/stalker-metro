@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,6 +24,7 @@ public struct MeshInfo {
 
 public class fieldOfView : MonoBehaviour {
     public float viewRadius = 25.0f;
+    public float lightRadius = 35.0f;
     [Range(0,360)] public float viewAngle = 360.0f;
     public LayerMask viewObstaclesMask;
     public float meshResolution = 0.5f;
@@ -31,6 +32,9 @@ public class fieldOfView : MonoBehaviour {
     public int edgeDetectionIterations = 10;
     public MeshFilter meshFilter;
     public float shadowOffset = 1.0f;
+    public GameObject mainFOV;
+    public GameObject secondaryFOV;
+    public float shadowDepth = 1.2f;
 
     private Mesh viewMesh;
     private List<GameObject> viewObstacles;
@@ -39,6 +43,10 @@ public class fieldOfView : MonoBehaviour {
         viewMesh = new Mesh();
         viewMesh.name = "View Mesh";
         meshFilter.mesh = viewMesh;
+        if(mainFOV && secondaryFOV) {
+            mainFOV.transform.localScale = new Vector3(lightRadius, lightRadius, 1.0f);
+            secondaryFOV.transform.localScale = new Vector3(viewRadius, viewRadius, 1.0f);
+        }
     }
 
     void LateUpdate() {
@@ -66,11 +74,11 @@ public class fieldOfView : MonoBehaviour {
             if(i > 0) {
                 GetEdgePoints(oldCastInfo,newCastInfo,points);
             }
-            // Debug.DrawLine(
-            //     transform.position,
-            //     new Vector2(transform.position.x, transform.position.y) + utils.DirFromAngle(transform, angle, true) * newCastInfo.distance,
-            //     Color.red
-            // );
+            Debug.DrawLine(
+                transform.position,
+                newCastInfo.point,
+                Color.red
+            );
             points.Add(newCastInfo.point);
             oldCastInfo = newCastInfo;
         }
@@ -102,19 +110,19 @@ public class fieldOfView : MonoBehaviour {
         if((oldCastInfo.hit && !newCastInfo.hit) || (oldCastInfo.hit && newCastInfo.hit && edgeDetectionThresholdExceeded)) {
             EdgeInfo edgeInfo = FindEdge(oldCastInfo, newCastInfo);
             if(edgeInfo.pointA != Vector2.zero) {
-                // Debug.DrawLine(
-                //     transform.position,
-                //     new Vector3(edgeInfo.pointA.x, edgeInfo.pointA.y, 0),
-                //     Color.blue
-                // );
+                Debug.DrawLine(
+                    transform.position,
+                    new Vector3(edgeInfo.pointA.x, edgeInfo.pointA.y, 0),
+                    Color.blue
+                );
                 points.Add(edgeInfo.pointA);
             }
             if(edgeInfo.pointB != Vector2.zero) {
-                // Debug.DrawLine(
-                //     transform.position,
-                //     new Vector3(edgeInfo.pointB.x, edgeInfo.pointB.y, 0),
-                //     Color.green
-                // );
+                Debug.DrawLine(
+                    transform.position,
+                    new Vector3(edgeInfo.pointB.x, edgeInfo.pointB.y, 0),
+                    Color.green
+                );
                 points.Add(edgeInfo.pointB);
             }
         }
