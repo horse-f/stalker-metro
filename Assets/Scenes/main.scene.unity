@@ -3981,12 +3981,12 @@ PrefabInstance:
     - target: {fileID: 8597007880430327896, guid: 3ddf5541f35ef4f4b86c51b5fe86c3da,
         type: 3}
       propertyPath: shadowDepth
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8597007880430327896, guid: 3ddf5541f35ef4f4b86c51b5fe86c3da,
         type: 3}
       propertyPath: shadowOffset
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8597007880430327896, guid: 3ddf5541f35ef4f4b86c51b5fe86c3da,
         type: 3}

@@ -9,15 +9,13 @@ public struct ViewCastInfo {
     public Vector2 point;
     public float angle;
     public Collider2D collider;
-    public Vector2 normal;
 
-    public ViewCastInfo(bool _hit, float _dist, Vector2 _point, float _angle, Collider2D _collider, Vector2 _normal) {
+    public ViewCastInfo(bool _hit, float _dist, Vector2 _point, float _angle, Collider2D _collider) {
         hit = _hit;
         point = _point;
         distance = _dist;
         angle = _angle;
         collider = _collider;
-        normal = _normal;
     }
 }
 
@@ -37,31 +35,41 @@ public class utils {
         Vector2 dir = utils.DirFromAngle(transform, globalAngle);
         RaycastHit2D hit2D = Physics2D.Raycast(transform.position, dir, viewRadius, viewObstaclesMask);
         if(hit2D.collider) {
-            return new ViewCastInfo(true, hit2D.distance, hit2D.point, globalAngle, hit2D.collider, hit2D.normal);
+            return new ViewCastInfo(true, hit2D.distance, hit2D.point, globalAngle, hit2D.collider);
         } else {
             Vector2 pos = new Vector2(transform.position.x, transform.position.y);
-            return new ViewCastInfo(false, viewRadius, pos + dir.normalized * viewRadius, globalAngle, null, -dir);
+            return new ViewCastInfo(false, viewRadius, pos + dir.normalized * viewRadius, globalAngle, null);
         }
     }
 
     // public static ViewCastInfo ViewCast(Transform transform, float globalAngle, float viewRadius, LayerMask viewObstaclesMask, float depth) {
     //     Vector2 dir = utils.DirFromAngle(transform, globalAngle);
-    //     RaycastHit2D hit2d = Physics2D.Raycast(transform.position, dir, viewRadius, viewObstaclesMask);
-    //     if(hit2d.collider) {
-    //         Vector2 pos = new Vector2(hit2d.point.x, hit2d.point.y) + dir.normalized * depth;
-    //         RaycastHit2D backHit = Physics2D.Raycast(pos, -dir, viewRadius + depth, viewObstaclesMask);
-    //         if(backHit.collider) {
-    //             return new ViewCastInfo(
-    //                 true, 
-    //                 Distance(new Vector2(transform.position.x, transform.position.y), backHit.point), 
-    //                 backHit.point, globalAngle, 
-    //                 backHit.collider
-    //             );
-    //         }
+    //     RaycastHit2D hit2D = Physics2D.Raycast(transform.position, dir, viewRadius, viewObstaclesMask);
+    //     if(hit2D.collider) {
+    //         return new ViewCastInfo(true, hit2D.distance, hit2D.point - hit2D.normal.normalized * depth, globalAngle, hit2D.collider);
     //     }
     //     Vector2 position = new Vector2(transform.position.x, transform.position.y);
     //     return new ViewCastInfo(false, viewRadius, position + dir.normalized * viewRadius, globalAngle, null);
     // }
+
+    public static ViewCastInfo ViewCast(Transform transform, float globalAngle, float viewRadius, LayerMask viewObstaclesMask, float depth) {
+        Vector2 dir = utils.DirFromAngle(transform, globalAngle);
+        RaycastHit2D hit2d = Physics2D.Raycast(transform.position, dir, viewRadius, viewObstaclesMask);
+        if(hit2d.collider) {
+            Vector2 pos = new Vector2(hit2d.point.x, hit2d.point.y) + dir.normalized * depth;
+            RaycastHit2D backHit = Physics2D.Raycast(pos, -dir, depth, viewObstaclesMask);
+            if(backHit.collider) {
+                return new ViewCastInfo(
+                    true, 
+                    Distance(new Vector2(transform.position.x, transform.position.y), backHit.point), 
+                    backHit.point, globalAngle, 
+                    backHit.collider
+                );
+            }
+        }
+        Vector2 position = new Vector2(transform.position.x, transform.position.y);
+        return new ViewCastInfo(false, viewRadius, position + dir.normalized * viewRadius, globalAngle, null);
+    }
 
     // public static ViewCastInfo ViewCastExit(Transform transform, float globalAngle, float viewRadius, LayerMask viewObstaclesMask, float ignoreDepth = 0.0f) {
     //     Vector2 dir = utils.DirFromAngle(transform, globalAngle);

@@ -34,7 +34,8 @@ public class fieldOfView : MonoBehaviour {
     public float shadowOffset = 1.0f;
     public GameObject mainFOV;
     public GameObject secondaryFOV;
-    public float shadowDepth = 1.2f;
+    // public float shadowDepth = 1.2f;
+    public float shadowIgnoreDepth = 0.8f;
 
     private Mesh viewMesh;
     private List<GameObject> viewObstacles;
@@ -70,7 +71,7 @@ public class fieldOfView : MonoBehaviour {
 
         for(int i = 0; i <= stepCount; i++) {
             float angle = transform.eulerAngles.y - viewAngle / 2 + stepAngle * i;
-            ViewCastInfo newCastInfo = utils.ViewCast(transform, angle, viewRadius, viewObstaclesMask);
+            ViewCastInfo newCastInfo = utils.ViewCast(transform, angle, viewRadius, viewObstaclesMask, shadowIgnoreDepth);
             if(i > 0) {
                 GetEdgePoints(oldCastInfo,newCastInfo,points);
             }
@@ -136,7 +137,7 @@ public class fieldOfView : MonoBehaviour {
 
         for(int i = 0; i < edgeDetectionIterations; i++) {
             float angle = (minAngle + maxAngle) / 2;
-            ViewCastInfo newViewCast = utils.ViewCast(transform, angle, viewRadius, viewObstaclesMask);
+            ViewCastInfo newViewCast = utils.ViewCast(transform, angle, viewRadius, viewObstaclesMask, shadowIgnoreDepth);
             bool edgeDetectionThresholdExceeded = Mathf.Abs(minCast.distance - newViewCast.distance) > edgeDetectionThreshold;
             if(newViewCast.hit == minCast.hit && !edgeDetectionThresholdExceeded) {
                 minAngle = angle;
