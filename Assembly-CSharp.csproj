@@ -39,6 +39,7 @@
      <Compile Include="Assets\character\characterController.cs" />
      <Compile Include="Assets\character\fieldOfView.cs" />
      <Compile Include="Assets\character\lightLevel.cs" />
+     <Compile Include="Assets\scripts\scaleCanvas.cs" />
      <Compile Include="Assets\utilities\utils.cs" />
      <None Include="Assets\shaders\FogOfWarV2.shader" />
      <None Include="Assets\shaders\FogOfWarShader.shader" />
