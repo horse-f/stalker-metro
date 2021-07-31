@@ -3,6 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+public struct LerpInfo {
+    public Vector3 start;
+    public Vector3 end;
+    public float startTime;
+    public float dist;
+    public float speed;
+    public float distCovered;
+
+    public LerpInfo(Vector3 _start, Vector3 _end, float _st, float _dist, float _speed, float _distCovered) {
+        start = _start;
+        end = _end;
+        startTime = _st;
+        dist = _dist;
+        speed = _speed;
+        distCovered = _distCovered;
+    }
+}
+
 public struct ViewCastInfo {
     public bool hit;
     public float distance;
@@ -61,7 +79,7 @@ public class utils {
             if(backHit.collider) {
                 return new ViewCastInfo(
                     true, 
-                    Distance(new Vector2(transform.position.x, transform.position.y), backHit.point), 
+                    Vector2.Distance(new Vector2(transform.position.x, transform.position.y), backHit.point), 
                     backHit.point, globalAngle, 
                     backHit.collider
                 );
@@ -115,13 +133,4 @@ public class utils {
     //     return Mathf.Asin(Dir.x) * Mathf.Rad2Deg;
     // }
 
-    public static float Distance(Vector2 A, Vector2 B) {
-        Vector2 BA = B - A;
-        return Mathf.Sqrt(BA.x * BA.x + BA.y * BA.y);
-    }
-
-    public static float Distance(Vector3 A, Vector3 B) {
-        Vector3 BA = B - A;
-        return Mathf.Sqrt(BA.x * BA.x + BA.y * BA.y + BA.z * BA.z);
-    }
 }

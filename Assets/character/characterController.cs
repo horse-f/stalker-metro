@@ -9,7 +9,9 @@ public class characterController : MonoBehaviour {
     public float cameraSize = 15.0f;
     public Transform aimPoint = null;
     public float zoomPadding = 2.0f;
+    public float zoomMax = 8.0f;
     public float zoomSize = 13.0f;
+    public float zoomSpeed = 8.0f;
     
     private Rigidbody2D rigidbody2d;
     private bool sprinting = false;
@@ -17,16 +19,20 @@ public class characterController : MonoBehaviour {
     private bool aimingOnce = false;
     private Camera mainCamera;
     private float zoomRadius = 0.0f;
+    // private Vector3 currentZoomPoint;
+    private LerpInfo zoomLerp = new LerpInfo();
 
     private void Start() {
         mainCamera = Camera.main;
         mainCamera.orthographicSize = cameraSize;
         rigidbody2d = gameObject.GetComponent<Rigidbody2D>();
+        zoomLerp.speed = zoomSpeed;
     }
 
     private void Update() {
         GetInput();
-        GetAim();
+        Aim();
+        zoomRadius = GetZoomRadius();
     }
 
     private void FixedUpdate() {
@@ -62,13 +68,18 @@ public class characterController : MonoBehaviour {
         }
     }
 
-    private void GetAim() {
+    private void Aim() {
         Vector3 mousePoint = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0));
         mousePoint.z = 0;
         if(aimPoint) {
             aimPoint.transform.LookAt(mousePoint + Vector3.right * aimPoint.transform.position.z);
             Debug.DrawRay(aimPoint.position, aimPoint.forward * 6, Color.yellow);
         }
+    }
+
+    private float GetZoomRadius() {
+        // find how to scale the zoom radius based on mouse position scaled to screen size?
+        return zoomMax;
     }
 
     private void Move(Vector2 input) {
@@ -84,21 +95,30 @@ public class characterController : MonoBehaviour {
     }
 
     private void AimDownSights() {
-        Vector2 zoomPoint = GetZoomPoint();
-        // find zoom point
-            // get mouse x,y
-            // get point in direction of mouse x,y at zoomRadius
+        Vector3 zoomPoint = GetZoomPoint();
+        zoomPoint.z = -10;
+        // if(zoomPoint != zoomLerp.end) {
+        //     zoomLerp.end = zoomPoint;
+        //     zoomLerp.dist = Vector3.Distance(zoomLerp.start, zoomLerp.end);
+        //     zoomLerp.distCovered = 0.0f;
+        //     zoomLerp.startTime = Time.time;
+        // } else {
+        //     zoomLerp.distCovered = (Time.time - zoomLerp.startTime) * zoomLerp.speed;
+        // }
+        // float frac = zoomLerp.distCovered / zoomLerp.dist;
+        // mainCamera.transform.position = Vector3.Lerp(zoomLerp.start, zoomLerp.end, frac);
         mainCamera.transform.position = new Vector3(zoomPoint.x, zoomPoint.y, -10);
-        // lerp camera to zoom point
-        // change camera size to zoomSize
+        mainCamera.orthographicSize = zoomSize;
     }
 
-    private Vector2 GetZoomPoint() {
-        return new Vector2(0,0);
+    private Vector3 GetZoomPoint() {
+        // return new Vector2(0,0);
+        return transform.position + aimPoint.forward.normalized * zoomRadius;
     }
 
     private void ResetAim() {
         // lerp camera back to default position
         mainCamera.transform.position = new Vector3(transform.position.x, transform.position.y, -10);
+        mainCamera.orthographicSize = cameraSize;
     }
 }

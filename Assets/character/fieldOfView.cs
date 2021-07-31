@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -34,7 +34,6 @@ public class fieldOfView : MonoBehaviour {
     public float shadowOffset = 1.0f;
     public GameObject mainFOV;
     public GameObject secondaryFOV;
-    // public float shadowDepth = 1.2f;
     public float shadowIgnoreDepth = 0.8f;
 
     private Mesh viewMesh;
@@ -75,11 +74,11 @@ public class fieldOfView : MonoBehaviour {
             if(i > 0) {
                 GetEdgePoints(oldCastInfo,newCastInfo,points);
             }
-            Debug.DrawLine(
-                transform.position,
-                newCastInfo.point,
-                Color.red
-            );
+            // Debug.DrawLine(
+            //     transform.position,
+            //     newCastInfo.point,
+            //     Color.red
+            // );
             points.Add(newCastInfo.point);
             oldCastInfo = newCastInfo;
         }
@@ -111,19 +110,19 @@ public class fieldOfView : MonoBehaviour {
         if((oldCastInfo.hit && !newCastInfo.hit) || (oldCastInfo.hit && newCastInfo.hit && edgeDetectionThresholdExceeded)) {
             EdgeInfo edgeInfo = FindEdge(oldCastInfo, newCastInfo);
             if(edgeInfo.pointA != Vector2.zero) {
-                Debug.DrawLine(
-                    transform.position,
-                    new Vector3(edgeInfo.pointA.x, edgeInfo.pointA.y, 0),
-                    Color.blue
-                );
+                // Debug.DrawLine(
+                //     transform.position,
+                //     new Vector3(edgeInfo.pointA.x, edgeInfo.pointA.y, 0),
+                //     Color.blue
+                // );
                 points.Add(edgeInfo.pointA);
             }
             if(edgeInfo.pointB != Vector2.zero) {
-                Debug.DrawLine(
-                    transform.position,
-                    new Vector3(edgeInfo.pointB.x, edgeInfo.pointB.y, 0),
-                    Color.green
-                );
+                // Debug.DrawLine(
+                //     transform.position,
+                //     new Vector3(edgeInfo.pointB.x, edgeInfo.pointB.y, 0),
+                //     Color.green
+                // );
                 points.Add(edgeInfo.pointB);
             }
         }
